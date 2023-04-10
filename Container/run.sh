@@ -25,6 +25,7 @@ docker run ${ARGS} \
   -e API_PORT="${API_PORT}" \
   -e VOTER_PASSWORD="${VOTER_PASSWORD:-}" \
   -e VALIDATOR_ADDRESS="${VALIDATOR_ADDRESS:-}" \
+  -e ORACLE_FEEDER_COIN_TYPE=330 \
   --name lunc-node \
   -p ${P2P_PORT}:${P2P_PORT} \
   -p 1317:1317 \
