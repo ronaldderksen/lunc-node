@@ -60,4 +60,6 @@ if [ ! -d ${HOME}/.terra/data/state.db ]; then
   mv data ${HOME}/.terra/data
 fi
 
+[ ! -e /terra/voter.json ] && echo '[]' >/terra/voter.json
+
 exec "$@"

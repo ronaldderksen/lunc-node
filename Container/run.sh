@@ -23,6 +23,8 @@ docker run ${ARGS} \
   -e MONIKER="${MONIKER:-}" \
   -e P2P_PORT="${P2P_PORT}" \
   -e API_PORT="${API_PORT}" \
+  -e VOTER_PASSWORD="${VOTER_PASSWORD:-}" \
+  -e VALIDATOR_ADDRESS="${VALIDATOR_ADDRESS:-}" \
   --name lunc-node \
   -p ${P2P_PORT}:${P2P_PORT} \
   -p 1317:1317 \
