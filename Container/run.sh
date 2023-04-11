@@ -20,14 +20,16 @@ docker &>/dev/null rm -f lunc-node
 
 docker run ${ARGS} \
   -v /local/terra:/terra \
+  -v ${LUNC_HOME}:/home/terra/lunc-node \
   -e MONIKER="${MONIKER:-}" \
   -e P2P_PORT="${P2P_PORT}" \
   -e API_PORT="${API_PORT}" \
   -e VOTER_PASSWORD="${VOTER_PASSWORD:-}" \
-  -e VALIDATOR_ADDRESS="${VALIDATOR_ADDRESS:-}" \
   -e ORACLE_FEEDER_COIN_TYPE=330 \
   --name lunc-node \
   -p ${P2P_PORT}:${P2P_PORT} \
   -p 1317:1317 \
   ${DOCKER_ARGS:-} \
   lunc-node "$@"
+
+  #-e VALIDATOR_ADDRESS="${VALIDATOR_ADDRESS:-}" \
