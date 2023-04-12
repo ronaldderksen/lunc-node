@@ -28,4 +28,4 @@ terrad tx staking create-validator \
     --min-self-delegation="1" \
     --gas=auto \
     --gas-adjustment=1.4 \
-    --fees=1500000uluna
+    --fees=10000000uluna

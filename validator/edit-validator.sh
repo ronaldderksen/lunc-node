@@ -22,7 +22,7 @@ terrad tx staking edit-validator \
     --from="${WALLET_NAME}" \
     --gas=auto \
     --gas-adjustment=1.4 \
-    --fees=1500000uluna
+    --fees=10000000uluna "$@"
 
     #--min-self-delegation="1" \
     #--commission-rate="${COMMISSION_RATE:-0.01}" \

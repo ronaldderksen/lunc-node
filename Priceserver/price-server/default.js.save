@@ -1,0 +1,114 @@
+// Updated by Derksen-validator
+
+const fiatSymbols = [
+  'SDR/USD',
+  'CNY/USD',
+  'EUR/USD',
+  'JPY/USD',
+  'GBP/USD',
+  'KRW/USD',
+  'INR/USD',
+  'CAD/USD',
+  'HKD/USD',
+  'AUD/USD',
+  'CHF/USD',
+  'DKK/USD',
+  'IDR/USD',
+  'MNT/USD',
+  'MYR/USD',
+  'NOK/USD',
+  'PHP/USD',
+  'SEK/USD',
+  'SGD/USD',
+  'THB/USD',
+  'TWD/USD',
+]
+
+module.exports = {
+  port: 8532,
+  metricsPort: 8533,
+  sentry: '', // sentry dsn (https://sentry.io/ - error reporting service)
+  reporter: true,
+  slack: {
+    // for incident alarm (e.g. exchange shutdown)
+    channel: '#bot-test',
+    url: '',
+  },
+  lunaProvider: {
+    fallbackPriority: ['binance', 'huobi', 'kucoin'],
+    adjustTvwap: ['LUNC/USDT'],
+    huobi: { symbols: ['LUNC/USDT'] },
+    binance: { symbols: ['LUNC/USDT'] },
+    kucoin: { symbols: ['LUNC/USDT'] },
+  },
+  cryptoProvider: {
+    adjustTvwap: {
+      symbols: [
+        'LUNC/USDT',
+      ]
+    },
+    fallbackPriority: ['binance', 'osmosis', 'kraken', 'bitfinex', 'huobi', 'kucoin', 'coinGecko'],
+    coinGecko: {
+      interval: 6 * 1000,
+      symbols: [
+        'LUNC/USDT',
+        'USTC/USDT',
+      ],
+    },
+    osmosis: {
+      interval: 6 * 1000,
+      symbols: [
+        'LUNC/USDT',
+        'USTC/USDT',
+      ],
+    },
+    binance: {
+      interval: 6 * 1000,
+      symbols: [
+        'LUNC/USDT',
+        'USTC/USDT',
+      ],
+    },
+    kraken: {
+      interval: 6 * 1000,
+      symbols: [
+        'ADA/USDT',
+      ],
+    },
+    kucoin: {
+      interval: 6 * 1000,
+      symbols: [
+        'LUNC/USDT',
+        'USTC/USDT',
+      ],
+    },
+    huobi: {
+      symbols: [
+        'LUNA/USDT',
+        'USTC/USDT',
+      ],
+    },
+    bitfinex: {
+      symbols: [
+        'ADA/USDT',
+      ],
+    },
+  },
+  fiatProvider: {
+    fallbackPriority: ['exchangerate', 'bandprotocol'],
+    bandprotocol: {
+      // DKK is not supported for bandprotocol
+      symbols: fiatSymbols.filter((v) => !v.includes('DKK') && !v.includes('PHP')),
+      interval: 60 * 1000,
+      timeout: 5000,
+      // https://data.bandprotocol.com/
+    },
+    exchangerate: {
+      symbols: fiatSymbols,
+      interval: 60 * 1000,
+      timeout: 5000,
+      // https://exchangerate.host/
+    },
+  },
+  fiatSymbols,
+}

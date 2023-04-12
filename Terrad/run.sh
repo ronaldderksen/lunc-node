@@ -16,7 +16,12 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 
 [ "${1:-}" = "-d" ] && { ARGS="-d --restart always"; shift; } || ARGS="-it --rm"
 
-docker &>/dev/null rm -f lunc-node
+docker &>/dev/null network inspect lunc-node || {
+  docker network create --subnet=172.18.0.0/16 lunc-node
+}
+
+TAG=lunc-node-$(basename $(pwd) |tr '[A-Z]' '[a-z]')
+docker &>/dev/null rm -f ${TAG} $(basename $(pwd) |tr '[A-Z]' '[a-z]')
 
 docker run ${ARGS} \
   -v /local/terra:/terra \
@@ -24,12 +29,10 @@ docker run ${ARGS} \
   -e MONIKER="${MONIKER:-}" \
   -e P2P_PORT="${P2P_PORT}" \
   -e API_PORT="${API_PORT}" \
-  -e VOTER_PASSWORD="${VOTER_PASSWORD:-}" \
-  -e ORACLE_FEEDER_COIN_TYPE=330 \
-  --name lunc-node \
+  --net lunc-node \
+  --ip 172.18.100.1 \
+  --name ${TAG} \
   -p ${P2P_PORT}:${P2P_PORT} \
   -p 1317:1317 \
   ${DOCKER_ARGS:-} \
-  lunc-node "$@"
-
-  #-e VALIDATOR_ADDRESS="${VALIDATOR_ADDRESS:-}" \
+  ${TAG} "$@"

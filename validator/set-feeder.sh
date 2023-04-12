@@ -14,4 +14,11 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 . ${LUNC_HOME}/env
 . ${LUNC_HOME}/include/common.inc
 
-echo terrad tx oracle set-feeder ${FEEDER_ADDRESS} --from=${WALLET_NAME} --fees=1500000uluna --chain-id=columbus-5
+FEEDER_ADDRESS=$(jq </terra/voter.json -r .[0].address)
+
+[[ "${FEEDER_ADDRESS}" =~ ^terra1 ]] || {
+  echo "FEEDER_ADDRESS not found in /terra/voter.json, is feeder container configured and running"
+  exit 1
+}
+
+terrad tx oracle set-feeder ${FEEDER_ADDRESS} --from=${WALLET_NAME} --fees=10000000uluna --chain-id=columbus-5
