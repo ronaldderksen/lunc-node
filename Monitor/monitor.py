@@ -44,7 +44,7 @@ def validator_details(v):
     return validator
 
 def delegator_info(delegator):
-    print ( 'Delegator: ' + delegator )
+    print ( "\nDelegator: " + delegator )
     rewards = terra.distribution.rewards(delegator)
     delegations = terra.staking.delegations(delegator=delegator)
     for x in delegations[0]:
@@ -86,9 +86,39 @@ def delegator_info(delegator):
             f.write (json.dumps(data))
             f.close()
 
+def validator_info(validator):
+    old_file = '/tmp/'+ validator + ".json"
+    try:
+        old = json.loads(Path(old_file).read_text().rstrip())
+    except:
+        old = None
+    data = validator_details(validator)
+    data['lunc_tokens'] = "%d" % (int(data['tokens'])/MULTIPLIER)
+    data['rate'] = "%0.2f" % float((data['commission']['commission_rates']['rate']))
+    data['moniker'] = "%-40s" % re.sub(r'[^\x00-\x7F]+',' ', data['description']['moniker'])[0:40]
+    data_pp = {}
+    for key in ['moniker','jailed','status','rate','lunc_tokens']:
+        data_pp[key] = data[key]
+    pp.pprint(data_pp)
+
+    min_change = 1
+    if old:
+        if data['rate'] != old['rate']:
+            ntfy (data['moniker'] + ": rate changed to: " + data['rate'])
+        if int(data['lunc_tokens']) != int(old['lunc_tokens']):
+            ntfy (data['moniker'] + ": has " + str(int(data['lunc_tokens'])-int(old['lunc_tokens'])) + " more LUNC tokens, total: " + data['lunc_tokens'])
+
+    f = open(old_file, mode='w')
+    f.write (json.dumps(data))
+    f.close()
+
 pp = pprint.PrettyPrinter(sort_dicts=False, width=240)
 
 print("\nSTART: ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 for delegator in config['delegators']:
     delegator_info(delegator)
+
+print("\nValidators")
+for validator in config['validators']:
+    validator_info(validator)
