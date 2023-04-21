@@ -32,7 +32,7 @@ default()
 }
 
 [ ! -d ${HOME}/.terra/config ] && mkdir ${HOME}/.terra/config
-[ ! -e ${HOME}/.terra/config/genesis.json ] && download ${HOME}/.terra/config/genesis.json ${GENESIS_URL:-https://www.terrarebels.net/assets/genesis.json}
+[ ! -e ${HOME}/.terra/config/genesis.json ] && download ${HOME}/.terra/config/genesis.json ${GENESIS_URL:-https://columbus-genesis.s3.ap-northeast-1.amazonaws.com/columbus-5-genesis.json}
 [ ! -e ${HOME}/.terra/config/addrbook.json ] && download ${HOME}/.terra/config/addrbook.json ${ADDRBOOK_URL:-https://dl2.quicksync.io/json/addrbook.terra.json}
 [ ! -e ${HOME}/.terra/config/client.toml ] && rm -f ${HOME}/.terra/config/.d/client.toml-*
 [ ! -e ${HOME}/.terra/config/app.toml ] && rm -f ${HOME}/.terra/config/.d/app.toml-*
@@ -48,6 +48,7 @@ NEW_GAS=$(gas.py)
 default client.toml chain-id columbus-5
 default app.toml api.enable true
 default app.toml minimum-gas-prices ${GAS}
+default app.toml pruning everything
 
 # env settings
 EXTERNAL_IP=${EXTERNAL_IP:-$(curl -q 2>/dev/null ipinfo.io/ip)}

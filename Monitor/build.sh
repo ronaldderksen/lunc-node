@@ -14,8 +14,9 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 . ${LUNC_HOME}/env
 . ${LUNC_HOME}/include/common.inc
 
-TAG=lunc-node-$(basename $(pwd) |tr '[A-Z]' '[a-z]')
+TAG=lunc-node-$(basename $(dirname $(realpath $0)) |tr '[A-Z]' '[a-z]')
 
-docker build -t lunc-node-base ../Base
+../Base/build.sh
+
 docker build \
   -t ${TAG} .
