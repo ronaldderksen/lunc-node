@@ -23,12 +23,16 @@ download()
 
 default()
 {
-  testfile=${HOME}/.terra/config/.d/${1}-${2}-${3}
-  tomlfile=${HOME}/.terra/config/${1}
+  file=${1}
+  option=${2}
+  key=${3}
+  value=${4}
+  testfile=${HOME}/.terra/config/.d/${file}-${key}-${value}
+  tomlfile=${HOME}/.terra/config/${file}
   [ -e ${testfile} ] && return
   [ ! -d $(dirname ${testfile}) ] && mkdir $(dirname ${testfile})
   echo "Set default: $@"
-  toml set --toml-path ${tomlfile} "${2}" "${3}" && touch $testfile
+  toml set --toml-path ${tomlfile} ${option} "${key}" "${value}" && touch $testfile
 }
 
 [ ! -d ${HOME}/.terra/config ] && mkdir ${HOME}/.terra/config
@@ -45,10 +49,11 @@ NEW_GAS=$(gas.py)
 [ -n "${NEW_GAS}" ] && GAS=${NEW_GAS} || GAS="28.325uluna,0.52469usdr,0.75uusd,850.0ukrw,2142.855umnt,0.625ueur,4.9ucny,81.85ujpy,0.55ugbp,54.4uinr,0.95ucad,0.7uchf,0.95uaud,1.0usgd,23.1uthb,6.25usek,6.25unok,4.5udkk,10900.0uidr,38.0uphp,5.85uhkd,3.0umyr,20.0utwd"
 
 # Apply some defaults
-default client.toml chain-id columbus-5
-default app.toml api.enable true
-default app.toml minimum-gas-prices ${GAS}
-default app.toml pruning everything
+default client.toml "" chain-id columbus-5
+default app.toml --to-bool api.enable true
+default app.toml "" minimum-gas-prices ${GAS}
+default app.toml "" pruning everything
+default app.toml --to-int min-retain-blocks 1
 
 # env settings
 EXTERNAL_IP=${EXTERNAL_IP:-$(curl -q 2>/dev/null ipinfo.io/ip)}
