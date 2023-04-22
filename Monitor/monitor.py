@@ -18,8 +18,14 @@ import re
 import math
 import time
 import pprint
+import shutil
 
 MULTIPLIER = 1000000
+DATA_PATH = '/terra/data'
+
+now = datetime.now()
+
+ts = now.strftime("%Y-%m-%d %H:%M")
 
 wd = os.path.dirname(__file__)
 if os.path.isfile(wd + '/config.yaml'):
@@ -70,17 +76,22 @@ def delegator_info(delegator):
                     "balance": "%12.2f" % (balance/MULTIPLIER),
                     "lunc": "%8.2f" % (uluna/MULTIPLIER),
                     "ustc": "%9.4f" % (uusd/MULTIPLIER),
-                    "div": "%7.2f" % (uluna/uusd),
+                    "lunc/ustc": "%7.2f" % (uluna/uusd),
             }
             data_pp = {}
-            data_pp['moniker'] = "%-40s" % re.sub(r'[^\x00-\x7F]+',' ', data['moniker'])[0:40]
-            for key in ['balance','lunc','ustc','div']:
+            data_pp['ts'] = ts
+            data_pp['moniker'] = "%-20s" % re.sub(r'[^\x00-\x7F]+',' ', data['moniker'])[0:20]
+            for key in ['balance','lunc','ustc','lunc/ustc']:
                 data_pp[key] = data[key]
-            pp.pprint(data_pp)
+            if old:
+                data_pp['lunc_diff'] = "%6.2f" % (float(data['lunc']) - float(old['lunc']))
+                data_pp['ustc_diff'] = "%6.2f" % (float(data['ustc']) - float(old['ustc']))
 
-            min_change = 1
-            if old and float(data['lunc']) - float(old['lunc']) < min_change and float(data['lunc']) - float(old['lunc']) > 0:
-                ntfy (data['moniker'] + ": low rewards for LUNC")
+                min_change = 1
+                if float(data['lunc']) - float(old['lunc']) < min_change and float(data['lunc']) - float(old['lunc']) > 0:
+                    ntfy (data['moniker'] + ": low rewards for LUNC")
+
+            pp.pprint(data_pp)
 
             f = open(old_file, mode='w')
             f.write (json.dumps(data))
@@ -95,8 +106,9 @@ def validator_info(validator):
     data = validator_details(validator)
     data['lunc_tokens'] = "%d" % (int(data['tokens'])/MULTIPLIER)
     data['rate'] = "%0.2f" % float((data['commission']['commission_rates']['rate']))
-    data['moniker'] = "%-40s" % re.sub(r'[^\x00-\x7F]+',' ', data['description']['moniker'])[0:40]
+    data['moniker'] = "%-20s" % re.sub(r'[^\x00-\x7F]+',' ', data['description']['moniker'])[0:20]
     data_pp = {}
+    data_pp['ts'] = ts
     for key in ['moniker','jailed','status','rate','lunc_tokens']:
         data_pp[key] = data[key]
     pp.pprint(data_pp)
@@ -112,9 +124,22 @@ def validator_info(validator):
     f.write (json.dumps(data))
     f.close()
 
+def os_info():
+    if os.path.isdir(DATA_PATH):
+        print("\nOS")
+        stat = shutil.disk_usage(DATA_PATH)
+
+        data_pp = {}
+        data_pp['ts'] = ts
+        for key in ['total', 'used', 'free']:
+            data_pp[key] = "%7.2f GiB" % (getattr(stat, key) / 1024 / 1024 / 1024)
+
+        pp.pprint(data_pp)
+
 pp = pprint.PrettyPrinter(sort_dicts=False, width=240)
 
-print("\nSTART: ", datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+print("\nSTART: ", now.strftime('%Y-%m-%d %H:%M:%S'))
+
 
 for delegator in config['delegators']:
     delegator_info(delegator)
@@ -122,3 +147,5 @@ for delegator in config['delegators']:
 print("\nValidators")
 for validator in config['validators']:
     validator_info(validator)
+
+os_info()
