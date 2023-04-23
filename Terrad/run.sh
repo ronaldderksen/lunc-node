@@ -11,7 +11,6 @@ error_handler()
 
 LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 
-. ${LUNC_HOME}/env
 . ${LUNC_HOME}/include/common.inc
 
 [ "${1:-}" = "-d" ] && { ARGS="-d --restart always"; shift; } || ARGS="-it --rm"
