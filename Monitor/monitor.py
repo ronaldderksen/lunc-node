@@ -134,6 +134,10 @@ def os_info():
         for key in ['total', 'used', 'free']:
             data_pp[key] = "%7.2f GiB" % (getattr(stat, key) / 1024 / 1024 / 1024)
 
+        free = getattr(stat, 'free') / 1024 / 1024 / 1024
+        if 'free_space_ntfy' in config and free < config['free_space_ntfy']:
+            ntfy('low disk space, free space is ' + "%7.2f GiB" % free + " GiB")
+
         pp.pprint(data_pp)
 
 pp = pprint.PrettyPrinter(sort_dicts=False, width=240)
