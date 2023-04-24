@@ -26,7 +26,7 @@ docker run ${ARGS} \
   -e ORACLE_FEEDER_PASSWORD="${ORACLE_FEEDER_PASSWORD:-}" \
   -e ORACLE_FEEDER_VALIDATORS="${ORACLE_FEEDER_VALIDATORS:-}" \
   -e ORACLE_FEEDER_IV_SALT="${ORACLE_FEEDER_IV_SALT:-Qp42jxz}" \
-  --net lunc-node \
+  --net host \
   --name ${TAG} \
   ${DOCKER_ARGS:-} \
   ${TAG} "$@"

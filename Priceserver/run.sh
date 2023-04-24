@@ -22,7 +22,6 @@ docker run ${ARGS} \
   -p 8532:8532 \
   -v /local/terra:/terra \
   -v ${LUNC_HOME}:/home/terra/lunc-node \
-  --net lunc-node \
-  --ip 172.18.100.2 \
+  --net host \
   --name ${TAG} \
   ${TAG} "$@"

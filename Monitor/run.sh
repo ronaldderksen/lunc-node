@@ -15,16 +15,12 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 
 [ "${1:-}" = "-d" ] && { ARGS="-d --restart always"; shift; } || ARGS="-it --rm"
 
-docker &>/dev/null network inspect lunc-node || {
-  docker network create --subnet=172.18.0.0/16 lunc-node
-}
-
 TAG=lunc-node-$(basename $(pwd) |tr '[A-Z]' '[a-z]')
 docker &>/dev/null rm -f ${TAG} $(basename $(pwd) |tr '[A-Z]' '[a-z]')
 
 docker run ${ARGS} \
   -v /local/terra:/terra \
   -v ${LUNC_HOME}:/home/terra/lunc-node \
-  --net lunc-node \
+  --net host \
   --name ${TAG} \
   ${TAG} "$@"

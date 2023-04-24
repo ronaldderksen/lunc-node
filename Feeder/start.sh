@@ -21,8 +21,8 @@ if [ "$(jq <${HOME}/git/oracle-feeder/feeder/voter.json -r .[0].name)" = ${ORACL
     while :
     do
       npm start vote -- \
-        -d http://172.18.100.2:8532/latest \
-        --lcd-url http://172.18.100.1:1317 \
+        -d http://127.0.0.1:8532/latest \
+        --lcd-url http://127.0.1.1:1317 \
         --chain-id columbus-5 \
 	  --validators ${ORACLE_FEEDER_VALIDATORS} \
         -p "${ORACLE_FEEDER_PASSWORD}"
