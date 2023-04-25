@@ -15,7 +15,7 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 
 [ "${1:-}" = "-d" ] && { ARGS="-d --restart always"; shift; } || ARGS="-it --rm"
 
-TAG=lunc-node-$(basename $(pwd) |tr '[A-Z]' '[a-z]')
+TAG=lunc-node-$(basename $(dirname $(realpath $0)) |tr '[A-Z]' '[a-z]')
 docker &>/dev/null rm -f ${TAG} $(basename $(pwd) |tr '[A-Z]' '[a-z]')
 
 docker run ${ARGS} \

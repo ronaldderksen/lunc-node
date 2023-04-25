@@ -1,15 +1,12 @@
-FROM lunc-node-base
-
-RUN mkdir -p /var/spool/cron/crontabs
-RUN ln -s busybox /usr/sbin/crond
-RUN ln -s busybox /usr/sbin/crontab
+FROM lunc-node-terrad
 
 USER terra
 
 ENV HOME=/home/terra
 
-RUN pip3 install terra-sdk
-RUN sed -i 's/pisco-1/columbus-5/g' $HOME/.local/lib/*/site-packages/terra_sdk/client/lcd/lcdclient.py
+RUN pip3 install terra-sdk && \
+    sed -i 's/pisco-1/columbus-5/g' $HOME/.local/lib/*/site-packages/terra_sdk/client/lcd/lcdclient.py && \
+    mkdir -p $HOME/.bashrc.d && echo 'PATH=$HOME/go/bin:$HOME/.local/bin:$PATH' >$HOME/.bashrc.d/path
 ENV PATH=$HOME/go/bin:$HOME/.local/bin:$PATH
 
 COPY monitor.py /bin/monitor.py
@@ -17,6 +14,10 @@ COPY ntfy.py /bin/ntfy.py
 COPY config.yaml /usr/local/etc/config.yaml
 
 USER root
+
+RUN mkdir -p /var/spool/cron/crontabs && \
+    ln -s busybox /usr/sbin/crond && \
+    ln -s busybox /usr/sbin/crontab
 
 COPY crontab /var/spool/cron/crontabs/terra
 COPY entrypoint.sh /bin/entrypoint.sh

@@ -15,6 +15,8 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 
 TAG=lunc-node-$(basename $(dirname $(realpath $0)) |tr '[A-Z]' '[a-z]')
 
+cd $(dirname $0)
+
 docker build -t ${TAG} \
   --build-arg TERRA_UID=${TERRA_UID:-$(id -u)} \
   --build-arg TERRA_GID=${TERRA_GID:-$(id -g)} \

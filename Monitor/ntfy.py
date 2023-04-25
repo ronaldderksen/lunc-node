@@ -7,8 +7,9 @@ import requests
 import yaml
 import os
 import sys
+import platform
 
-MULTIPLIER = 1000000
+node_name = platform.node().split(".")[0]
 
 wd = os.path.dirname(__file__)
 if os.path.isfile(wd + '/config.yaml'):
@@ -17,8 +18,10 @@ else:
     config = yaml.safe_load(Path('/usr/local/etc/config.yaml').read_text())
 
 def ntfy(msg):
-    print(msg)
+    msg2 = node_name + ': ' + msg
+    print(msg2)
     if config['ntfy_topic']:
-        requests.post("https://ntfy.sh/" + config['ntfy_topic'], data=msg)
+        requests.post("https://ntfy.sh/" + config['ntfy_topic'], data=msg2)
+
 
 ntfy(sys.argv[1])

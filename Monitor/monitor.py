@@ -19,6 +19,10 @@ import math
 import time
 import pprint
 import shutil
+import subprocess
+import platform
+
+node_name = platform.node().split(".")[0]
 
 MULTIPLIER = 1000000
 DATA_PATH = '/terra/data'
@@ -41,9 +45,10 @@ else:
 terra = LCDClient(chain_id="columbus-5", url=lcd_url)
 
 def ntfy(msg):
-    print(msg)
+    msg2 = re.sub(r'[^\x00-\x7F]+','', node_name + ': ' + msg)
+    print(msg2)
     if config['ntfy_topic']:
-        requests.post("https://ntfy.sh/" + config['ntfy_topic'], data=msg)
+        requests.post("https://ntfy.sh/" + config['ntfy_topic'], data=msg2)
 
 def validator_details(v):
     validator = terra.staking.validator(v).to_data()
@@ -89,7 +94,7 @@ def delegator_info(delegator):
 
                 min_change = 1
                 if float(data['lunc']) - float(old['lunc']) < min_change and float(data['lunc']) - float(old['lunc']) > 0:
-                    ntfy (data['moniker'] + ": low rewards for LUNC")
+                    ntfy (data['moniker'] + ": low rewards for LUNC (" + "%.4f" % (float(data['lunc']) - float(old['lunc'])) + ")")
 
             pp.pprint(data_pp)
 
@@ -118,7 +123,9 @@ def validator_info(validator):
         if data['rate'] != old['rate']:
             ntfy (data['moniker'] + ": rate changed to: " + data['rate'])
         if int(data['lunc_tokens']) != int(old['lunc_tokens']):
-            ntfy (data['moniker'] + ": has " + str(int(data['lunc_tokens'])-int(old['lunc_tokens'])) + " more LUNC tokens, total: " + data['lunc_tokens'])
+            diff = '{:,.0f}'.format(int(data['lunc_tokens'])-int(old['lunc_tokens']))
+            total = '{:,.0f}'.format(int(data['lunc_tokens']))
+            ntfy (data['moniker'] + ": has " + diff + " more LUNC tokens, total: " + total)
 
     f = open(old_file, mode='w')
     f.write (json.dumps(data))
@@ -140,10 +147,35 @@ def os_info():
 
         pp.pprint(data_pp)
 
+def terrad_status():
+    old_file = '/tmp/terrad-status.json'
+
+    try:
+        result = json.loads(subprocess.run(['terrad', 'status'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL).stdout)
+    except:
+        result = None
+
+    try:
+        old = json.loads(Path(old_file).read_text().rstrip())
+    except:
+        old = None
+
+    if old and result and 'SyncInfo' in old and 'SyncInfo' in result:
+        if old['SyncInfo']['catching_up'] != result['SyncInfo']['catching_up']:
+            ntfy('catching_up is now: ' + str(result['SyncInfo']['catching_up']))
+        if old['SyncInfo']['latest_block_height'] == result['SyncInfo']['latest_block_height']:
+            ntfy('latest_block_height is not increasing')
+
+    if result:
+        f = open(old_file, mode='w')
+        f.write (json.dumps(result))
+        f.close()
+
 pp = pprint.PrettyPrinter(sort_dicts=False, width=240)
 
 print("\nSTART: ", now.strftime('%Y-%m-%d %H:%M:%S'))
 
+terrad_status()
 
 for delegator in config['delegators']:
     delegator_info(delegator)

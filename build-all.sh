@@ -2,5 +2,5 @@
 
 for d in Terrad Feeder Priceserver Monitor
 do
-  cd $d && ./build.sh && cd ..
+  $d/build.sh
 done

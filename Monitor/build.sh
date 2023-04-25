@@ -15,7 +15,9 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 
 TAG=lunc-node-$(basename $(dirname $(realpath $0)) |tr '[A-Z]' '[a-z]')
 
-../Base/build.sh
+cd $(dirname $0)
+
+../Terrad/build.sh
 
 docker build \
   -t ${TAG} .
