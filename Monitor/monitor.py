@@ -81,18 +81,25 @@ def delegator_info(delegator):
                     "balance": "%12.2f" % (balance/MULTIPLIER),
                     "lunc": "%8.2f" % (uluna/MULTIPLIER),
                     "ustc": "%9.4f" % (uusd/MULTIPLIER),
-                    "lunc/ustc": "%7.2f" % (uluna/uusd),
+                    "ts": time.time()
             }
             data_pp = {}
             data_pp['ts'] = ts
             data_pp['moniker'] = "%-20s" % re.sub(r'[^\x00-\x7F]+',' ', data['moniker'])[0:20]
-            for key in ['balance','lunc','ustc','lunc/ustc']:
+            for key in ['balance','lunc','ustc']:
                 data_pp[key] = data[key]
             if old:
                 data_pp['lunc_diff'] = "%6.2f" % (float(data['lunc']) - float(old['lunc']))
                 data_pp['ustc_diff'] = "%6.2f" % (float(data['ustc']) - float(old['ustc']))
 
-                min_change = 1
+                # Notify if we earned less then 5%
+                min_apy = 5
+                if 'ts' in old:
+                    time_diff = data['ts'] - old['ts']
+                    min_change = ((balance/MULTIPLIER)/100*min_apy) / (365*24*3600) * time_diff
+                else:
+                    min_change = 0
+                data_pp['mc'] = "%.4f" % min_change
                 if float(data['lunc']) - float(old['lunc']) < min_change and float(data['lunc']) - float(old['lunc']) > 0:
                     ntfy (data['moniker'] + ": low rewards for LUNC (" + "%.4f" % (float(data['lunc']) - float(old['lunc'])) + ")")
 
@@ -118,7 +125,6 @@ def validator_info(validator):
         data_pp[key] = data[key]
     pp.pprint(data_pp)
 
-    min_change = 1
     if old:
         if data['rate'] != old['rate']:
             ntfy (data['moniker'] + ": rate changed to: " + data['rate'])
