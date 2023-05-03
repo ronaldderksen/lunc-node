@@ -26,7 +26,5 @@ docker run ${ARGS} \
   -e API_PORT="${API_PORT}" \
   --net host \
   --name ${TAG} \
-  -p ${P2P_PORT}:${P2P_PORT} \
-  -p 1317:1317 \
   ${DOCKER_ARGS:-} \
   ${TAG} "$@"

@@ -45,7 +45,7 @@ default()
 terrad status &>/dev/null || true
 
 # Set gas prices
-NEW_GAS=$(gas.py)
+NEW_GAS=$(gas.py 2>/dev/null) || true
 [ -n "${NEW_GAS}" ] && GAS=${NEW_GAS} || GAS="28.325uluna,0.52469usdr,0.75uusd,850.0ukrw,2142.855umnt,0.625ueur,4.9ucny,81.85ujpy,0.55ugbp,54.4uinr,0.95ucad,0.7uchf,0.95uaud,1.0usgd,23.1uthb,6.25usek,6.25unok,4.5udkk,10900.0uidr,38.0uphp,5.85uhkd,3.0umyr,20.0utwd"
 
 # Apply some defaults

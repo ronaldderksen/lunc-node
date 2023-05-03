@@ -19,7 +19,6 @@ TAG=lunc-node-$(basename $(dirname $(realpath $0)) |tr '[A-Z]' '[a-z]')
 docker &>/dev/null rm -f ${TAG} $(basename $(pwd) |tr '[A-Z]' '[a-z]')
 
 docker run ${ARGS} \
-  -p 8532:8532 \
   -v /local/terra:/terra \
   -v ${LUNC_HOME}:/home/terra/lunc-node \
   --net host \
