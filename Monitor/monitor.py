@@ -14,6 +14,7 @@ import requests
 import json
 import yaml
 import os
+import stat
 import re
 import math
 import time
@@ -42,13 +43,32 @@ if 'lcd_url' in config:
 else:
     lcd_url = 'https://terra-classic-lcd.publicnode.com'
 
+if 'ntfy_interval' in config:
+    ntfy_interval = int(config['ntfy_interval'])
+else:
+    ntfy_interval = 3600
+
 terra = LCDClient(chain_id="columbus-5", url=lcd_url)
 
 def ntfy(msg):
     msg2 = re.sub(r'[^\x00-\x7F]+','', node_name + ': ' + msg)
     print(msg2)
     if config['ntfy_topic']:
-        requests.post("https://ntfy.sh/" + config['ntfy_topic'], data=msg2)
+        msg3 = re.sub('[\d\.]+\s*GiB','', msg2)
+        msg3 = re.sub('[\s\:]','-', msg3)
+        testfile = '/tmp/.test-' + msg3
+        try:
+            stats = os.stat(testfile)
+        except:
+            stats = None
+        if stats:
+            test_time = stats[stat.ST_MTIME]
+        else:
+            test_time = 0
+        ts = time.time()
+        if ts-test_time > ntfy_interval:
+            open(testfile, mode='w').close()
+            requests.post("https://ntfy.sh/" + config['ntfy_topic'], data=msg2)
 
 def validator_details(v):
     validator = terra.staking.validator(v).to_data()
@@ -149,7 +169,7 @@ def os_info():
 
         free = getattr(stat, 'free') / 1024 / 1024 / 1024
         if 'free_space_ntfy' in config and free < config['free_space_ntfy']:
-            ntfy('low disk space, free space is ' + "%7.2f GiB" % free + " GiB")
+            ntfy('low disk space, free space is ' + "%7.2f GiB" % free )
 
         pp.pprint(data_pp)
 
