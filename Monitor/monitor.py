@@ -116,12 +116,12 @@ def delegator_info(delegator):
                 min_apy = 5
                 if 'ts' in old:
                     time_diff = data['ts'] - old['ts']
-                    min_change = ((balance/MULTIPLIER)/100*min_apy) / (365*24*3600) * time_diff
+                    apy = ( ((float(data['lunc']) - float(old['lunc'])) / time_diff) * 365*24*3600  * 100 ) / (balance/MULTIPLIER)
                 else:
-                    min_change = 0
-                data_pp['mc'] = "%.4f" % min_change
-                if float(data['lunc']) - float(old['lunc']) < min_change and float(data['lunc']) - float(old['lunc']) > 0:
-                    ntfy (data['moniker'] + ": low rewards for LUNC (" + "%.4f" % (float(data['lunc']) - float(old['lunc'])) + ")")
+                    apy = 0
+                data_pp['apy'] = "%.1f" % apy
+                if apy < min_apy and float(data['lunc']) - float(old['lunc']) > 0:
+                    ntfy (data['moniker'] + ": low apy for LUNC (" + "%.1f" % apy + ")")
 
             pp.pprint(data_pp)
 
