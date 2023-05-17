@@ -6,7 +6,7 @@ ENV HOME=/home/terra
 
 RUN pip3 install toml-cli
 
-RUN mkdir $HOME/git && cd $HOME/git && git clone https://github.com/classic-terra/core/ && cd core && git checkout v1.1.0 && make install
+RUN mkdir $HOME/git && cd $HOME/git && git clone https://github.com/classic-terra/core/ && cd core && git checkout v2.0.0-final && make install
 
 ENV PATH=$HOME/go/bin:$HOME/.local/bin:$HOME/lunc-node/bin:$PATH
 
