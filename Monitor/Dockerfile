@@ -1,4 +1,6 @@
-FROM lunc-node-terrad
+ARG GIT_TAG
+ARG IMAGE_PREFIX
+FROM ${IMAGE_PREFIX}lunc-node-base:$GIT_TAG
 
 USER terra
 

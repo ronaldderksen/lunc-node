@@ -27,4 +27,4 @@ docker run ${ARGS} \
   --net host \
   --name ${TAG} \
   ${DOCKER_ARGS:-} \
-  ${TAG} "$@"
+  ${IMAGE_PREFIX}${TAG}:${GIT_TAG} "$@"

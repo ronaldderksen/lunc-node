@@ -29,8 +29,4 @@ docker run ${ARGS} \
   --net host \
   --name ${TAG} \
   ${DOCKER_ARGS:-} \
-  ${TAG} "$@"
-
-  #-e VALIDATOR_ADDRESS="${VALIDATOR_ADDRESS:-}" \
-  #-e ORACLE_FEEDER_COIN_TYPE=330 \
-  #-e COIN_TYPE=330 \
+  ${IMAGE_PREFIX}${TAG}:${GIT_TAG} "$@"

@@ -1,12 +1,16 @@
-FROM lunc-node-base
+ARG GIT_TAG
+ARG IMAGE_PREFIX
+FROM ${IMAGE_PREFIX}lunc-node-base:${GIT_TAG}
 
 USER terra
 
+ARG GIT_TAG
 ENV HOME=/home/terra
+ENV GIT_TAG=${GIT_TAG}
 
 RUN pip3 install toml-cli
 
-RUN mkdir $HOME/git && cd $HOME/git && git clone https://github.com/classic-terra/core/ && cd core && git checkout v2.0.0-final && make install
+RUN mkdir $HOME/git && cd $HOME/git && git clone https://github.com/classic-terra/core/ && cd core && git checkout ${GIT_TAG} && make install
 
 ENV PATH=$HOME/go/bin:$HOME/.local/bin:$HOME/lunc-node/bin:$PATH
 

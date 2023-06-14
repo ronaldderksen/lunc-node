@@ -1,6 +1,3 @@
-P2P_PORT=${P2P_PORT:-26656}
-API_PORT=${API_PORT:-1317}
-
 # Find env file
 if [ -e "${HOME}/.terra/config/env" ]; then
   . ${HOME}/.terra/config/env
@@ -12,3 +9,9 @@ else
   echo "Cannot find env file"
   exit 1
 fi
+
+P2P_PORT=${P2P_PORT:-26656}
+API_PORT=${API_PORT:-1317}
+#GIT_TAG=${GIT_TAG:-v2.1.1}
+GIT_TAG=${GIT_TAG:-v2.0.0-final}
+IMAGE_PREFIX=${IMAGE_PREFIX:-ronaldd/}

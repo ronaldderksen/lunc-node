@@ -23,4 +23,4 @@ docker run ${ARGS} \
   -v ${LUNC_HOME}:/home/terra/lunc-node \
   --net host \
   --name ${TAG} \
-  ${TAG} "$@"
+  ${IMAGE_PREFIX}${TAG}:${GIT_TAG} "$@"

@@ -15,13 +15,4 @@ LUNC_HOME=$(cd $(dirname $0)/..; /bin/pwd)
 
 TAG=lunc-node-$(basename $(dirname $(realpath $0)) |tr '[A-Z]' '[a-z]')
 
-cd $(dirname $0)
-
-../Base/build.sh
-
-docker build \
-  --build-arg P2P_PORT=${P2P_PORT} \
-  --build-arg API_PORT=${API_PORT} \
-  --build-arg GIT_TAG=${GIT_TAG} \
-  --build-arg IMAGE_PREFIX=${IMAGE_PREFIX} \
-  -t ${IMAGE_PREFIX}${TAG}:${GIT_TAG} .
+docker push ${IMAGE_PREFIX}${TAG}:${GIT_TAG}

@@ -20,4 +20,6 @@ cd $(dirname $0)
 ../Base/build.sh
 
 docker build \
-  -t ${TAG} .
+  --build-arg GIT_TAG=${GIT_TAG} \
+  --build-arg IMAGE_PREFIX=${IMAGE_PREFIX} \
+  -t ${IMAGE_PREFIX}${TAG}:${GIT_TAG} .

@@ -54,6 +54,8 @@ default app.toml --to-bool api.enable true
 default app.toml "" minimum-gas-prices ${GAS}
 default app.toml "" pruning everything
 default app.toml --to-int min-retain-blocks 1
+default app.toml --to-int wasm.query_gas_limit 3000000
+default app.toml --to-int wasm.memory_cache_size 100
 
 # env settings
 EXTERNAL_IP=${EXTERNAL_IP:-$(curl -q 2>/dev/null ipinfo.io/ip)}
