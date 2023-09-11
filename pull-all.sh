@@ -2,5 +2,5 @@
 
 for d in Terrad Feeder Priceserver Monitor
 do
-  $d/push.sh
+  $d/pull.sh -d
 done
