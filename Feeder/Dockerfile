@@ -10,7 +10,7 @@ ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN mkdir -p $HOME/git && \
     cd $HOME/git && git clone https://github.com/classic-terra/oracle-feeder.git && \
     cd $HOME/git/oracle-feeder/feeder && \
-    sed -i 's/args.validators/args.validator/' src/index.ts && \
+    git checkout v3.1.0 && \
     npm install && \
     ln -s /terra/voter.json voter.json
 
