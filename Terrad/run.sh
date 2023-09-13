@@ -24,6 +24,7 @@ docker run ${ARGS} \
   -e MONIKER="${MONIKER:-}" \
   -e P2P_PORT="${P2P_PORT}" \
   -e API_PORT="${API_PORT}" \
+  --log-driver journald \
   --net host \
   --name ${TAG} \
   ${DOCKER_ARGS:-} \

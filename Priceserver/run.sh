@@ -21,6 +21,7 @@ docker &>/dev/null rm -f ${TAG} $(basename $(pwd) |tr '[A-Z]' '[a-z]')
 docker run ${ARGS} \
   -v /local/terra:/terra \
   -v ${LUNC_HOME}:/home/terra/lunc-node \
+  --log-driver journald \
   --net host \
   --name ${TAG} \
   ${IMAGE_PREFIX}${TAG}:${GIT_TAG} "$@"
