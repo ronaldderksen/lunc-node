@@ -38,6 +38,9 @@ if os.path.isfile(wd + '/config.yaml'):
 else:
     config = yaml.safe_load(Path('/usr/local/etc/config.yaml').read_text())
 
+if 'ntfy_diff_tokens' not in config:
+    config['ntfy_diff_tokens'] = True
+
 if 'lcd_url' in config:
     lcd_url = config['lcd_url']
 else:
@@ -151,7 +154,8 @@ def validator_info(validator):
         if int(data['lunc_tokens']) != int(old['lunc_tokens']):
             diff = '{:,.0f}'.format(int(data['lunc_tokens'])-int(old['lunc_tokens']))
             total = '{:,.0f}'.format(int(data['lunc_tokens']))
-            ntfy (data['moniker'] + ": has " + diff + " more LUNC tokens, total: " + total)
+            if config['ntfy_diff_tokens']:
+                ntfy (data['moniker'] + ": has " + diff + " more LUNC tokens, total: " + total)
 
     f = open(old_file, mode='w')
     f.write (json.dumps(data))
