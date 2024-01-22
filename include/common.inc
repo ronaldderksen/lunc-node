@@ -10,6 +10,7 @@ else
   exit 1
 fi
 
+CONTAINERS2RUN=${CONTAINERS2RUN:-Terrad Feeder Priceserver Monitor}
 P2P_PORT=${P2P_PORT:-26656}
 API_PORT=${API_PORT:-1317}
 GIT_TAG=${GIT_TAG:-v2.3.2}
